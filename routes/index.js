@@ -1,20 +1,18 @@
 var express = require('express');
 var connection = require('./mysqlConnection');
+var dateFormat = require('dateformat');
 var router = express.Router();
 
-/* GET home page. */
 router.get('/', function (req, res, next) {
-    
-    connection.connect();
-    connection.query('SELECT * FROM Usuario', function (err, rows, fields) {
+    connection.query('SELECT * FROM Eventos ORDER BY Data DESC', function (err, rows, fields) {
         if (err) throw err
-
-        res.end(JSON.stringify(rows));
+        //res.end(JSON.stringify(rows));
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].Data = dateFormat(rows[i].Data, "dd/mm/yyyy");
+            rows[i].Descricao = rows[i].Descricao.substring(0, 500) + "...";
+        }
+        res.render('index', { title: "Eventos", rows: rows });
     });
-    connection.end(); 
-    
-    //res.render('index', { title: "123" });
-    
 });
 
 module.exports = router;
