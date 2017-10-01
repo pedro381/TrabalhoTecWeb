@@ -5,7 +5,6 @@ var router = express.Router();
 
 router.get('/', function (req, res, next) {
     connection.query('SELECT * FROM Eventos ORDER BY Data DESC', function (err, rows, fields) {
-        if (err) throw err
         //res.end(JSON.stringify(rows));
         for (var i = 0; i < rows.length; i++) {
             rows[i].Data = dateFormat(rows[i].Data, "dd/mm/yyyy");
